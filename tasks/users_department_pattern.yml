@@ -30,7 +30,7 @@
   with_dict: autologic_users
   when: item.value.groups is defined and item.value.department in autologic_departments
 
-- name: Add user SSH (public) keys
+- name: Add user SSH (public) keys (department pattern)
   authorized_key:
     user: "{{item.0.username}}"
     key: "{{item.1}}"
@@ -38,4 +38,4 @@
   with_subelements:
     - autologic_users
     - sshkeys
-  when: autologic_manage_sshkeys and item.value.department in autologic_departments
+  when: autologic_manage_sshkeys == true and item.0.department in autologic_departments
