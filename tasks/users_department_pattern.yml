@@ -38,4 +38,4 @@
   with_subelements:
     - autologic_users
     - sshkeys
-  when: item.value.department in autologic_departments and autologic_manage_sshkeys
+  when: autologic_manage_sshkeys and item.value.department in autologic_departments
