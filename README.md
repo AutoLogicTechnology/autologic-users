@@ -43,7 +43,7 @@ The **job:** value can be used to define what groups and or hosts this user shou
 
 There is a special variable called 'autologic_department_pattern' which can be turned on (true) or off (false). If this flag is turned on, a second variable can be used in group and host variables (group_vars/, host_vars/, etc) to determine if a given user - who belongs to a 'department:', as above - should be added to the hosts in a given group or a specific host directly.
 
-This is somewhat complex and as such, an entirely separate repository has been setup [over here]() for your review.
+This is somewhat complex and as such, an entirely separate repository has been setup [over here](https://github.com/AutoLogicTechnology/example-users) for your review.
 
 Overall, the idea is to avoid merged hashes (hash_behaviour: 'merge'). When using merged hashes, it becomes very tempting to follow design patterns and behaviours which get messy, confusing, and hard to debug very quickly. The "Department Pattern" attempts to resolve this.
 
