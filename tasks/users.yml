@@ -6,28 +6,10 @@
     state: "{{item.value.state|default('present')}}"
     system: "{{item.value.system|default(false)}}"
     comment: "{{item.key}}"
+    uid: "{{item.value.uid|default(omit)}}"
+    home: "{{item.value.home|default(omit)}}"
+    groups: "{{item.value.groups|default(omit)|join(',')}}"
   with_dict: autologic_users
-
-- name: Configure user UIDs
-  user:
-    name: "{{item.value.username}}"
-    uid: "{{item.value.uid}}"
-  with_dict: autologic_users
-  when: item.value.uid is defined
-
-- name: Configure user home directory
-  user:
-    name: "{{item.value.username}}"
-    home: "{{item.value.home}}"
-  with_dict: autologic_users
-  when: item.value.home is defined
-
-- name: Configure user groups
-  user:
-    name: "{{item.value.username}}"
-    groups: "{{item.value.groups|join(',')}}"
-  with_dict: autologic_users
-  when: item.value.groups is defined
 
 - name: Add user SSH (public) keys
   authorized_key:

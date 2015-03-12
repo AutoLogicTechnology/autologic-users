@@ -6,29 +6,11 @@
     state: "{{item.value.state|default('present')}}"
     system: "{{item.value.system|default(false)}}"
     comment: "{{item.key}}"
+    uid: "{{item.value.uid|default(omit)}}"
+    home: "{{item.value.home|default(omit)}}"
+    groups: "{{item.value.groups|default(omit)|join(',')}}"
   with_dict: autologic_users
   when: item.value.department in autologic_departments
-
-- name: Configure user UIDs (department pattern)
-  user:
-    name: "{{item.value.username}}"
-    uid: "{{item.value.uid}}"
-  with_dict: autologic_users
-  when: item.value.uid is defined and item.value.department in autologic_departments
-
-- name: Configure user home directory (department pattern)
-  user:
-    name: "{{item.value.username}}"
-    home: "{{item.value.home}}"
-  with_dict: autologic_users
-  when: item.value.home is defined and item.value.department in autologic_departments
-
-- name: Configure user groups (department pattern)
-  user:
-    name: "{{item.value.username}}"
-    groups: "{{item.value.groups|join(',')}}"
-  with_dict: autologic_users
-  when: item.value.groups is defined and item.value.department in autologic_departments
 
 - name: Add user SSH (public) keys (department pattern)
   authorized_key:
