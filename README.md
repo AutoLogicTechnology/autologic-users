@@ -24,7 +24,7 @@ autologic_users:
     state: 'present' # default is 'present'
     sshkeys:
       - 'ssh-rsa AAAA...'
-    # department: ''
+    department: 'systems'
     # uid: ''
     # system: false
     # group: 'mcrilly'
@@ -41,83 +41,11 @@ The **job:** value can be used to define what groups and or hosts this user shou
 
 ## Department Pattern
 
-There is a special variable called 'autologic_department_pattern' which can be turned on (true) or off (false). If this flag is turned on, a variable can be used in group and host variables (group_vars/, host_vars/, etc) to determine if a given user - who belongs to a 'department:', as above - should be added to the hosts in a given group or a specific host directly.
+There is a special variable called 'autologic_department_pattern' which can be turned on (true) or off (false). If this flag is turned on, a second variable can be used in group and host variables (group_vars/, host_vars/, etc) to determine if a given user - who belongs to a 'department:', as above - should be added to the hosts in a given group or a specific host directly.
 
-Here's an example:
+This is somewhat complex and as such, an entirely separate repository has been setup [over here]() for your review.
 
-```yaml
----
-# site.yml
-- hosts: all
-  sudo: true
-  roles:
-    - { role: autologic_users, autologic_department_pattern: true }
-```
-
-Above we are adding the autologic_users role to our site, but parameterising it and configuring it with 'autologic_department_patterm' turned on. Now we'll define our users, followed by group and host level declarations to refine what users can access what systems.
-
-```yaml
----
-# group_vars/all.yml
-autologic_users:
-  'Michael Crilly':
-    username: 'mcrilly'
-    sshkeys:
-      - 'ssh-rsa AAAA...'
-    department: 'systems'
-
-  'John Smith':
-    username: 'johns'
-    sshkeys:
-      - 'ssh-rsa AAAA...'
-    department: 'developers'
-
-  'Michael Jackson':
-    username: 'mjackson'
-    sshkeys:
-      - 'ssh-rsa AAAA...'
-    department: 'ui'
-```
-
-```yaml
----
-# group_vars/webservers.yml
-autologic_departments:
-  - 'systems'
-  - 'developers'
-```
-
-```yaml
----
-# host_vars/web-03.yml
-autologic_departments:
-  - 'ui'
-```
-
-This yields the following results:
-
-...
-
-## Example Playbook
-
-This example does not use the Department Pattern as seen above.
-
-```yaml
----
-- hosts: all
-  sudo: true
-  vars:
-    autologic_users:
-      'Michael Crilly':
-        username: 'mcrilly'
-        sshkeys:
-          - 'ssh-rsa AAAA...'
-      'John Doe':
-        username: 'johnd'
-        state: 'absent'
-  roles:
-    - autologic_users
-```
+Overall, the idea is to avoid merged hashes (hash_behaviour: 'merge'). When using merged hashes, it becomes very tempting to follow design patterns and behaviours which get messy, confusing, and hard to debug very quickly. The "Department Pattern" attempts to resolve this.
 
 ## License
 
