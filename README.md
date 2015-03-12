@@ -2,6 +2,10 @@
 
 A simple role for managing users and groups with Ansible.
 
+## Version
+
+v1.0.0
+
 ## Role Variables
 
 We have a variable for defining groups:
