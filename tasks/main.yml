@@ -6,8 +6,9 @@
 
 - include: users.yml
   tags: autologic_users_play_users
-  when: autologic_manage_users
+  when: autologic_manage_users and not autologic_department_pattern
 
-- include: sshkeys.yml
-  tags: autologic_users_play_sshkeys
-  when: autologic_manage_sshkeys
+- include: users_department_pattern.yml
+  tags: autologic_users_play_users
+  when: autologic_manage_users and autologic_department_pattern
+

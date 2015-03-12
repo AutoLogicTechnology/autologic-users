@@ -1,33 +1,34 @@
 ---
 
-- name: Add the system users
+- name: Add the system users (department pattern)
   user:
     name: "{{item.value.username}}"
     state: "{{item.value.state|default('present')}}"
     system: "{{item.value.system|default(false)}}"
     comment: "{{item.key}}"
   with_dict: autologic_users
+  when: item.value.department in autologic_departments
 
-- name: Configure user UIDs
+- name: Configure user UIDs (department pattern)
   user:
     name: "{{item.value.username}}"
     uid: "{{item.value.uid}}"
   with_dict: autologic_users
-  when: item.value.uid is defined
+  when: item.value.uid is defined and item.value.department in autologic_departments
 
-- name: Configure user home directory
+- name: Configure user home directory (department pattern)
   user:
     name: "{{item.value.username}}"
     home: "{{item.value.home}}"
   with_dict: autologic_users
-  when: item.value.home is defined
+  when: item.value.home is defined and item.value.department in autologic_departments
 
-- name: Configure user groups
+- name: Configure user groups (department pattern)
   user:
     name: "{{item.value.username}}"
     groups: "{{item.value.groups|join(',')}}"
   with_dict: autologic_users
-  when: item.value.groups is defined
+  when: item.value.groups is defined and item.value.department in autologic_departments
 
 - name: Add user SSH (public) keys
   authorized_key:
@@ -37,4 +38,4 @@
   with_subelements:
     - autologic_users
     - sshkeys
-  when: autologic_manage_sshkeys
+  when: item.value.department in autologic_departments and autologic_manage_sshkeys

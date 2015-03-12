@@ -5,9 +5,11 @@
     name: "{{item.value.groupname}}"
     state: "{{item.value.state|default('present')}}"
     system: "{{item.value.system|default(false)}}"
+  with_dict: autologic_groups
 
 - name: Configure group GIDs
   group:
     name: "{{item.value.groupname}}"
     gid: "{{item.value.gid}}"
+  with_dict: autologic_groups
   when: item.value.gid is defined
