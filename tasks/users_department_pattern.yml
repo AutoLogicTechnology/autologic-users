@@ -10,7 +10,7 @@
     home: "{{item.value.home|default(omit)}}"
     groups: "{{item.value.groups|default(omit)|join(',')}}"
   with_dict: autologic_users
-  when: item.value.department in autologic_departments
+  when: item.value.department in autologic_department_access
 
 - name: Add user SSH (public) keys (department pattern)
   authorized_key:
@@ -20,4 +20,4 @@
   with_subelements:
     - autologic_users
     - sshkeys
-  when: autologic_manage_sshkeys == true and item.0.department in autologic_departments
+  when: autologic_manage_sshkeys == true and item.0.department in autologic_department_access

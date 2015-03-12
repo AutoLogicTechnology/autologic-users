@@ -5,7 +5,7 @@ autologic_manage_sshkeys: true
 autologic_groups: []
 autologic_users: []
 
- # See README for more details about the
- # department pattern.
+# See README for more details about the
+# department pattern.
 autologic_department_pattern: false
-autologic_departments: []
+autologic_department_access: []
