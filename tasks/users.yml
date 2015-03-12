@@ -1,0 +1,25 @@
+---
+
+- name: Add the system users
+  user:
+    name: "{{item.value.username}}"
+    state: "{{item.value.state|default('present')}}"
+    system: "{{item.value.system|default(false)}}"
+
+- name: Configure user UIDs
+  user:
+    name: "{{item.value.username}}"
+    uid: "{{item.value.uid}}"
+  when: item.value.uid is defined
+
+- name: Configure user home directory
+  user:
+    name: "{{item.value.username}}"
+    home: "{{item.value.home}}"
+  when: item.value.home is defined
+
+- name: Configure user groups:
+  user:
+    name: "{{item.value.username}}"
+    groups: "{{item.value.groups|join(',')}}"
+  when: item.value.groups is defined

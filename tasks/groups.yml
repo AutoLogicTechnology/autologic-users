@@ -1,0 +1,13 @@
+---
+
+- name: Setup the system groups
+  group:
+    name: "{{item.value.groupname}}"
+    state: "{{item.value.state|default('present')}}"
+    system: "{{item.value.system|default(false)}}"
+
+- name: Configure group GIDs
+  group:
+    name: "{{item.value.groupname}}"
+    gid: "{{item.value.gid}}"
+  when: item.value.gid is defined

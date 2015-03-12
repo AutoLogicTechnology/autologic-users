@@ -1,0 +1,13 @@
+---
+
+- include: groups.yml
+  tags: autologic_users_play_groups
+  when: autologic_manage_groups
+
+- include: users.yml
+  tags: autologic_users_play_users
+  when: autologic_manage_users
+
+- include: sshkeys.yml
+  tags: autologic_users_play_sshkeys
+  when: autologic_manage_sshkeys

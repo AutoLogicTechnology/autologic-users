@@ -1,0 +1,10 @@
+---
+
+- name: Add user SSH (public) keys
+  authorized_key:
+    user: "{{item.0.username}}"
+    key: "{{item.1}}"
+    state: 'present'
+  with_subelements:
+    - autologic_users
+    - sshkeys

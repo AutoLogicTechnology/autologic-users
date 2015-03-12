@@ -1,0 +1,8 @@
+---
+galaxy_info:
+  author: Michael Crilly
+  description: User and group management role
+  company: Autologic Technology Ltd
+  license: MIT
+  min_ansible_version: 1.8.4
+dependencies: []
