@@ -18,8 +18,8 @@
   authorized_key:
     user:     "{{item.0.username}}"
     key:      "{{item.1}}"
-    state:    'present'
+    state:    "{{item.0.state}}"
   with_subelements:
     - autologic_users
     - sshkeys
-  when: autologic_manage_sshkeys and item.0.department in autologic_department_access and item.0.state == 'present'
+  when: autologic_manage_sshkeys and item.0.department in autologic_department_access
