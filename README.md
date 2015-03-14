@@ -30,11 +30,13 @@ autologic_users:
       - 'ssh-rsa AAAA...'
     department: 'systems'
     # uid: ''
-    # system: false
+    # home: '/home/mcrilly'
     # group: 'mcrilly'
     # groups:
     #  - 'superusers'
-    # home: '/home/mcrilly'
+    # system: false
+    # remove: false
+    # force: false
 ```
 
 The top level key for each user, such as 'Michael Crilly' in the above example, is used for the 'comment=' field on the user module.
