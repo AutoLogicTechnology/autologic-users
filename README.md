@@ -1,57 +1,95 @@
-# Role Name
+# Autologic Users
 
-A simple role for managing users and groups with Ansible.
+Manage system groups and users using nothing but easy to read dictionaries. Using the more advanced ["Department Pattern"](#) you can also control access based on a user's role within your organisation. Should you hire a consultant or contractor who only needs limited access, the Department Pattern offers you a flexible way of adding individual users to individual systems.
 
 ## Version
 
-1.0.4
+2.0.0
 
 ## Role Variables
 
-We have a variable for defining groups:
+Here is a summary of the available variables, as defined in ```defaults/main.yml```:
 
 ```yaml
-autologic_groups:
-  'Human Readable':
-    groupname: 'superusers'
-    state: 'present' # default is 'present'
-    # gid: ''
-    # system: false
+---
+autologic_manage_groups: true
+autologic_manage_users: true
+autologic_manage_sshkeys: true
+
+autologic_system_groups: []
+autologic_system_users: []
+
+autologic_department_pattern: false
+autologic_department_access: []
+autologic_user_access: []
 ```
 
-And a variable for defining users:
+Here is example groups list:
 
 ```yaml
-autologic_users:
+---
+autologic_system_groups:
+  'Human Readable':
+    groupname: 'superusers'
+    state: 'present'
+    # gid: ''
+    # system: false
+
+  'Development':
+    groupname: 'development'
+    state: 'present'
+    gid: 5001
+```
+
+And an example variable for defining users:
+
+```yaml
+---
+autologic_system_users:
   'Michael Crilly':
     username: 'mcrilly'
-    state: 'present' # default is 'present'
+    state: 'present'
     sshkeys:
       - 'ssh-rsa AAAA...'
     department: 'systems'
+    # groups:
+    #  - 'superusers'
     # uid: ''
     # home: '/home/mcrilly'
     # group: 'mcrilly'
-    # groups:
-    #  - 'superusers'
     # system: false
     # remove: false
     # force: false
 ```
 
+If you decide to use the "Department Pattern", then you can make use of two additional variables. As an example:
+
+```yaml
+---
+# group_vars/example.yml
+autologic_department_access:
+    - systems
+```
+
+Or for specific user access, primarily used for individual host access control:
+
+```yaml
+---
+# host_vars/example.yml
+autologic_user_access:
+    - mcrilly
+```
+
 The top level key for each user, such as 'Michael Crilly' in the above example, is used for the 'comment=' field on the user module.
 
-At present, with regards to users, only the basic operations are supported from within the role. That is, things like 'expired=', ssh related values (except for the public key), etc, are omitted until a need presents its self for a more complex role.
-
-The **job:** value can be used to define what groups and or hosts this user should belong to. See the [Autologic Example Users](https://github.com/AutoLogicTechnology/example-users) repository for a working example on how-to use this field to easily manage users. The idea is to remove the need to do a hash merging, which gets very messy, very quickly.
+*At present, with regards to users, only the basic operations are supported from within the role. That is, things like 'expired=', ssh related values (except for the public key), etc, are omitted until a need presents its self for a more complex role.*
 
 ## Department Pattern
+The **department:** value can be used to define what groups and or hosts this user should belong to. The idea is to remove the need to do hash merging, which gets very messy, very quickly. To avoid using merges, we've created two lists you can use for access control: ```autologic_department_access``` and ```autologic_user_access```. You will also need to turn on this method using the ```autologic_department_pattern``` variable.
 
-There is a special variable called 'autologic_department_pattern' which can be turned on (true) or off (false). If this flag is turned on, a second variable can be used in group and host variables (group_vars/, host_vars/, etc) to determine if a given user - who belongs to a 'department:', as above - should be added to the hosts in a given group or a specific host directly.
+**Please note that even with the use of ```autologic_user_access```, a ```department:``` value still needs to be defined.**
 
-This is somewhat complex and as such, an entirely separate repository has been setup [over here](https://github.com/AutoLogicTechnology/example-users) for your review.
-
-Overall, the idea is to avoid merged hashes (hash_behaviour: 'merge'). When using merged hashes, it becomes very tempting to follow design patterns and behaviours which get messy, confusing, and hard to debug very quickly. The "Department Pattern" attempts to resolve this.
+See the [Autologic Example Users](https://github.com/AutoLogicTechnology/example-users) repository for a working example on how-to use this pattern to easily manage users.
 
 ## License
 
