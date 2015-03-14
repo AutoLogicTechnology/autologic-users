@@ -8,7 +8,7 @@
     comment:  "{{item.key}}"
     uid:      "{{item.value.uid|default(omit)}}"
     home:     "{{item.value.home|default(omit)}}"
-    groups:   "{{item.value.groups|default(omit)|join(',')}}"
+    groups:   "{{item.value.groups|default([])|join(',')}}"
     remove:   "{{item.value.remove|default(false)}}"
     force:    "{{item.value.force|default(false)}}"
   with_dict:  autologic_system_users
