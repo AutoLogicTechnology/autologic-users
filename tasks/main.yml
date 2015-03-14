@@ -1,14 +1,14 @@
 ---
 
 - include: groups.yml
-  tags: autologic_users_play_groups
   when: autologic_manage_groups
+  tags: autologic_users_play_groups
 
 - include: users.yml
-  tags: autologic_users_play_users
   when: autologic_manage_users and not autologic_department_pattern
+  tags: autologic_users_play_users
 
 - include: users_department_pattern.yml
-  tags: autologic_users_play_users
   when: autologic_manage_users and autologic_department_pattern
+  tags: autologic_users_play_users
 

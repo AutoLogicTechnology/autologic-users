@@ -3,13 +3,13 @@
 - name: Setup the system groups
   group:
     name: "{{item.value.groupname}}"
-    state: "{{item.value.state|default('present')}}"
+    state: "{{item.value.state}}"
     system: "{{item.value.system|default(false)}}"
-  with_dict: autologic_groups
+  with_dict: autologic_system_groups
 
 - name: Configure group GIDs
   group:
     name: "{{item.value.groupname}}"
     gid: "{{item.value.gid}}"
-  with_dict: autologic_groups
+  with_dict: autologic_system_groups
   when: item.value.gid is defined
