@@ -84,7 +84,10 @@ The top level key for each user, such as 'Michael Crilly' in the above example, 
 
 *At present, with regards to users, only the basic operations are supported from within the role. That is, things like 'expired=', ssh related values (except for the public key), etc, are omitted until a need presents its self for a more complex role.*
 
-## Department Pattern
+## Basic User Management (```autologic_department_pattern: false```)
+If your needs are simple, then the default operation of this role is take all users from the ```autologic_system_user``` hash and add or remove them accordingly. This can be powerful enough for most people with a simple, flat user structure.
+
+## Complex User Management (```autologic_department_pattern: true```)
 The **department:** value can be used to define what groups and or hosts this user should belong to. The idea is to remove the need to do hash merging, which gets very messy, very quickly. To avoid using merges, we've created two lists you can use for access control: ```autologic_department_access``` and ```autologic_user_access```. You will also need to turn on this method using the ```autologic_department_pattern``` variable.
 
 **Please note that even with the use of ```autologic_user_access```, a ```department:``` value still needs to be defined.**
