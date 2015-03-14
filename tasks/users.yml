@@ -1,9 +1,9 @@
 ---
 
-- name: Add the system users
+- name: Add the system users (basic)
   user:
     name:     "{{item.value.username}}"
-    state:    "{{item.value.state|default('present')}}"
+    state:    "{{item.value.state}}"
     system:   "{{item.value.system|default(false)}}"
     comment:  "{{item.key}}"
     uid:      "{{item.value.uid|default(omit)}}"
@@ -11,14 +11,14 @@
     groups:   "{{item.value.groups|default(omit)|join(',')}}"
     remove:   "{{item.value.remove|default(false)}}"
     force:    "{{item.value.force|default(false)}}"
-  with_dict:  autologic_users
+  with_dict:  autologic_system_users
 
-- name: Add user SSH (public) keys
+- name: Add user's SSH keys (basic)
   authorized_key:
     user:   "{{item.0.username}}"
     key:    "{{item.1}}"
-    state:  "{{item.0.state|default('present')}}"
+    state:  "{{item.0.state}}"
   with_subelements:
-    - autologic_users
+    - autologic_system_users
     - sshkeys
-  when: autologic_manage_sshkeys
+  when: autologic_manage_sshkeys and item.0.state != 'absent'

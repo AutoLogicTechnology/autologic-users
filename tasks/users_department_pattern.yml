@@ -1,25 +1,49 @@
 ---
 
-- name: Add the system users (department pattern)
+- name: Add the system users (department)
   user:
     name:     "{{item.value.username}}"
-    state:    "{{item.value.state|default('present')}}"
+    state:    "{{item.value.state}}"
     system:   "{{item.value.system|default(false)}}"
     comment:  "{{item.key}}"
     uid:      "{{item.value.uid|default(omit)}}"
     home:     "{{item.value.home|default(omit)}}"
-    groups:   "{{item.value.groups|default(omit)|join(',')}}"
+    groups:   "{{item.value.groups|default([])|join(',')}}"
     remove:   "{{item.value.remove|default(false)}}"
     force:    "{{item.value.force|default(false)}}"
-  with_dict:  autologic_users
+  with_dict:  autologic_system_users
   when: item.value.department in autologic_department_access
 
-- name: Add user SSH (public) keys (department pattern)
+- name: Add the system users (user)
+  user:
+    name:     "{{item.value.username}}"
+    state:    "{{item.value.state}}"
+    system:   "{{item.value.system|default(false)}}"
+    comment:  "{{item.key}}"
+    uid:      "{{item.value.uid|default(omit)}}"
+    home:     "{{item.value.home|default(omit)}}"
+    groups:   "{{item.value.groups|default([])|join(',')}}"
+    remove:   "{{item.value.remove|default(false)}}"
+    force:    "{{item.value.force|default(false)}}"
+  with_dict:  autologic_system_users
+  when: item.value.username in autologic_user_access
+
+- name: Add user's SSH keys (department)
   authorized_key:
     user:     "{{item.0.username}}"
     key:      "{{item.1}}"
-    state:    "{{item.0.state|default('present')}}"
+    state:    "{{item.0.state}}"
   with_subelements:
-    - autologic_users
+    - autologic_system_users
     - sshkeys
-  when: autologic_manage_sshkeys and item.0.department in autologic_department_access
+  when: autologic_manage_sshkeys and item.0.department in autologic_department_access and item.0.state != 'absent'
+
+- name: Add user's SSH keys (user)
+  authorized_key:
+    user:     "{{item.0.username}}"
+    key:      "{{item.1}}"
+    state:    "{{item.0.state}}"
+  with_subelements:
+    - autologic_system_users
+    - sshkeys
+  when: autologic_manage_sshkeys and item.0.username in autologic_user_access and item.0.state != 'absent'
