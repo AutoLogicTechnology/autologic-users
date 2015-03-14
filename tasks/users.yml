@@ -2,20 +2,22 @@
 
 - name: Add the system users
   user:
-    name: "{{item.value.username}}"
-    state: "{{item.value.state|default('present')}}"
-    system: "{{item.value.system|default(false)}}"
-    comment: "{{item.key}}"
-    uid: "{{item.value.uid|default(omit)}}"
-    home: "{{item.value.home|default(omit)}}"
-    groups: "{{item.value.groups|default(omit)|join(',')}}"
-  with_dict: autologic_users
+    name:     "{{item.value.username}}"
+    state:    "{{item.value.state|default('present')}}"
+    system:   "{{item.value.system|default(false)}}"
+    comment:  "{{item.key}}"
+    uid:      "{{item.value.uid|default(omit)}}"
+    home:     "{{item.value.home|default(omit)}}"
+    groups:   "{{item.value.groups|default(omit)|join(',')}}"
+    remove:   "{{item.value.remove|default(false)}}"
+    force:    "{{item.value.force|default(false)}}"
+  with_dict:  autologic_users
 
 - name: Add user SSH (public) keys
   authorized_key:
-    user: "{{item.0.username}}"
-    key: "{{item.1}}"
-    state: 'present'
+    user:   "{{item.0.username}}"
+    key:    "{{item.1}}"
+    state:  'present'
   with_subelements:
     - autologic_users
     - sshkeys
