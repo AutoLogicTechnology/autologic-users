@@ -4,7 +4,7 @@ Manage system groups and users using nothing but easy to read dictionaries. Usin
 
 ## Version
 
-2.0.0
+2.0.1
 
 ## Role Variables
 
