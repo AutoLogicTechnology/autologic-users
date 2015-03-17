@@ -8,6 +8,7 @@
     comment:  "{{item.key}}"
     uid:      "{{item.value.uid|default(omit)}}"
     home:     "{{item.value.home|default(omit)}}"
+    group:    "{{item.value.group|default(omit)}}"
     groups:   "{{item.value.groups|default([])|join(',')}}"
     remove:   "{{item.value.remove|default(false)}}"
     force:    "{{item.value.force|default(false)}}"
