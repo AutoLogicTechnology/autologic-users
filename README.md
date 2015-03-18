@@ -6,7 +6,7 @@ Using a single hash, this role will allow you to define what users exist on your
 
 ## Version
 
-3.0.0
+3.0.1
 
 ## Role Variables
 
@@ -76,6 +76,13 @@ The **departments:** value can be used to define what groups and or hosts this u
 If you have a user that doesn't belong to a particular department, such as an external company or contractor, then you can just make ```departments: []``` an empty list, like this.
 
 See the [Autologic Example Users](https://github.com/AutoLogicTechnology/example-users) repository for a working example on how-to use this pattern to easily manage users.
+
+## SSH Keys
+Each user's SSH is managed from a dedicted file. This makes the ```autologic_system_users:``` hash much easier to manage and read.
+
+When utilised, the role will use SSH keys found in ```files/sshkeys/{{autologic_system_users.username}}``` for managing your user's ```authorized_keys``` file. That is, in your Ansible root create a folder called ```files/sshkeys``` and place a new file in there with the same name as your username(s). This will be that user's dedicated SSH key file, enabling you to easily manage multiple keys and SSH options from a single point, without creating overly complicated variable files.
+
+See the [Autologic Example Users](https://github.com/AutoLogicTechnology/example-users) repository for a working example on how-to manage user SSH keys.
 
 ## License
 
