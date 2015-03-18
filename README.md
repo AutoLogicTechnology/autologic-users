@@ -1,10 +1,12 @@
 # Autologic Users
 
-Manage system groups and users using nothing but easy to read dictionaries. Using the more advanced ["Department Pattern"](#) you can also control access based on a user's role within your organisation. Should you hire a consultant or contractor who only needs limited access, the Department Pattern offers you a flexible way of adding individual users to individual systems.
+Manage UNIX system users and groups from a single role.
+
+Using a single hash, this role will allow you to define what users exist on your systems. Using the more advanced "Department Pattern" allows you to introduce a simple list for each of your groups/hosts: ```autologic_department_access```.
 
 ## Version
 
-2.1.1
+3.0.0
 
 ## Role Variables
 
@@ -12,11 +14,9 @@ Here is a summary of the available variables, as defined in ```defaults/main.yml
 
 ```yaml
 ---
-autologic_manage_groups: true
 autologic_manage_users: true
 autologic_manage_sshkeys: true
 
-autologic_system_groups: []
 autologic_system_users: []
 
 autologic_department_pattern: false
@@ -24,24 +24,7 @@ autologic_department_access: []
 autologic_user_access: []
 ```
 
-Here is example groups list:
-
-```yaml
----
-autologic_system_groups:
-  'Human Readable':
-    groupname: 'superusers'
-    state: 'present'
-    # gid: ''
-    # system: false
-
-  'Development':
-    groupname: 'development'
-    state: 'present'
-    gid: 5001
-```
-
-And an example variable for defining users:
+Here is an example variable for defining users:
 
 ```yaml
 ---
@@ -49,11 +32,9 @@ autologic_system_users:
   'Michael Crilly':
     username: 'mcrilly'
     state: 'present'
-    sshkeys:
-      - 'ssh-rsa AAAA...'
-    department: 'systems'
-    # groups:
-    #  - 'superusers'
+    departments:
+      - 'systems'
+    # comment: ''
     # uid: ''
     # home: '/home/mcrilly'
     # group: 'mcrilly'
@@ -62,35 +43,37 @@ autologic_system_users:
     # force: false
 ```
 
-If you decide to use the "Department Pattern", then you can make use of two additional variables. As an example:
+You'll note that there is no 'groups' hash or list for defining groups. This is because the ```departments:``` list is used to define what groups the user exists in. It's also used to decide what groups need to be created on what hosts. This means you don't need to worry about a group existing on a system because the role will ensure it exists before adding the user.
+
+If you decide to use the "Department Pattern", then you can make use of two additional variables and has a huge amount of flexibility to your estate. As an example:
 
 ```yaml
 ---
-# group_vars/example.yml
+# group_vars/webservers.yml
 autologic_department_access:
     - systems
+    - developers
 ```
 
 Or for specific user access, primarily used for individual host access control:
 
 ```yaml
 ---
-# host_vars/example.yml
+# host_vars/web-01.yml
 autologic_user_access:
     - mcrilly
+    - johndoe
 ```
 
-The top level key for each user, such as 'Michael Crilly' in the above example, is used for the 'comment=' field on the user module.
-
-*At present, with regards to users, only the basic operations are supported from within the role. That is, things like 'expired=', ssh related values (except for the public key), etc, are omitted until a need presents its self for a more complex role.*
-
-## Basic User Management (```autologic_department_pattern: false```)
+## Basic User Management (autologic_department_pattern: false)
 If your needs are simple, then the default operation of this role is take all users from the ```autologic_system_user``` hash and add or remove them accordingly. This can be powerful enough for most people with a simple, flat user structure.
 
-## Complex User Management (```autologic_department_pattern: true```)
-The **department:** value can be used to define what groups and or hosts this user should belong to. The idea is to remove the need to do hash merging, which gets very messy, very quickly. To avoid using merges, we've created two lists you can use for access control: ```autologic_department_access``` and ```autologic_user_access```. You will also need to turn on this method using the ```autologic_department_pattern``` variable.
+The ```departments:``` list will be used to create whatever groups are needed on each system for the user in question.
 
-**Please note that even with the use of ```autologic_user_access```, a ```department:``` value still needs to be defined.**
+## Complex User Management (autologic_department_pattern: true)
+The **departments:** value can be used to define what groups and or hosts this user should belong to. The idea is to remove the need to do hash merging, which gets very messy, very quickly. To avoid using merges, we've created two lists you can use for access control: ```autologic_department_access``` and ```autologic_user_access```. You will also need to turn on this method using the ```autologic_department_pattern``` variable.
+
+If you have a user that doesn't belong to a particular department, such as an external company or contractor, then you can just make ```departments: []``` an empty list, like this.
 
 See the [Autologic Example Users](https://github.com/AutoLogicTechnology/example-users) repository for a working example on how-to use this pattern to easily manage users.
 

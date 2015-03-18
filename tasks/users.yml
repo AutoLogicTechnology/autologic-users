@@ -5,21 +5,19 @@
     name:     "{{item.value.username}}"
     state:    "{{item.value.state}}"
     system:   "{{item.value.system|default(false)}}"
-    comment:  "{{item.key}}"
+    comment:  "{{item.value.comment|default(omit)}}"
     uid:      "{{item.value.uid|default(omit)}}"
     home:     "{{item.value.home|default(omit)}}"
     group:    "{{item.value.group|default(omit)}}"
-    groups:   "{{item.value.groups|default([])|join(',')}}"
+    groups:   "{{item.value.departments|default([])|join(',')}}"
     remove:   "{{item.value.remove|default(false)}}"
     force:    "{{item.value.force|default(false)}}"
   with_dict:  autologic_system_users
 
 - name: Add user's SSH keys (basic)
   authorized_key:
-    user:   "{{item.0.username}}"
-    key:    "{{item.1}}"
-    state:  "{{item.0.state}}"
-  with_subelements:
-    - autologic_system_users
-    - sshkeys
-  when: autologic_manage_sshkeys and item.0.state != 'absent'
+    user:     "{{item.value.username}}"
+    key:      "{{lookup('file', 'files/sshkeys/' + item.value.username)}}"
+    state:    "{{item.value.state}}"
+  with_dict: autologic_system_users
+  when: autologic_manage_sshkeys and item.value.state != 'absent'

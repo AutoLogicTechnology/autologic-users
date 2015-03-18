@@ -1,15 +1,23 @@
 ---
 
-- name: Setup the system groups
+- name: Setup the system departments (department)
   group:
-    name: "{{item.value.groupname}}"
-    state: "{{item.value.state}}"
-    system: "{{item.value.system|default(false)}}"
-  with_dict: autologic_system_groups
+    name: "{{item.1}}"
+    state: "{{item.0.state}}"
+    gid: "{{item.0.gid|default(omit)}}"
+    system: "{{item.0.system|default(false)}}"
+  with_subelements:
+    - autologic_system_users
+    - departments
+  when: autologic_department_pattern and item.1 in autologic_department_access
 
-- name: Configure group GIDs
+- name: Setup the system departments (basic)
   group:
-    name: "{{item.value.groupname}}"
-    gid: "{{item.value.gid}}"
-  with_dict: autologic_system_groups
-  when: item.value.gid is defined
+    name: "{{item.1}}"
+    state: "{{item.0.state}}"
+    gid: "{{item.0.gid|default(omit)}}"
+    system: "{{item.0.system|default(false)}}"
+  with_subelements:
+    - autologic_system_users
+    - departments
+  when: not autologic_department_pattern

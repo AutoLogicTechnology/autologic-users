@@ -4,7 +4,7 @@ autologic_manage_groups: true
 autologic_manage_users: true
 autologic_manage_sshkeys: true
 
-autologic_system_groups: []
+# autologic_system_groups: []
 autologic_system_users: []
 
 # See README for more details about the

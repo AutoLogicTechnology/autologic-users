@@ -2,50 +2,52 @@
 
 - name: Add the system users (department)
   user:
-    name:     "{{item.value.username}}"
-    state:    "{{item.value.state}}"
-    system:   "{{item.value.system|default(false)}}"
-    comment:  "{{item.key}}"
-    uid:      "{{item.value.uid|default(omit)}}"
-    home:     "{{item.value.home|default(omit)}}"
-    group:    "{{item.value.group|default(omit)}}"
-    groups:   "{{item.value.groups|default([])|join(',')}}"
-    remove:   "{{item.value.remove|default(false)}}"
-    force:    "{{item.value.force|default(false)}}"
-  with_dict:  autologic_system_users
-  when: item.value.department in autologic_department_access
+    name:     "{{item.0.username}}"
+    state:    "{{item.0.state}}"
+    system:   "{{item.0.system|default(false)}}"
+    comment:  "{{item.0.comment|default(omit)}}"
+    uid:      "{{item.0.uid|default(omit)}}"
+    home:     "{{item.0.home|default(omit)}}"
+    group:    "{{item.0.group|default(omit)}}"
+    groups:   "{{item.0.departments|default([])|join(',')}}"
+    remove:   "{{item.0.remove|default(false)}}"
+    force:    "{{item.0.force|default(false)}}"
+  register: valid_users
+  with_subelements:
+    - autologic_system_users
+    - departments
+  when: item.1 in autologic_department_access
+
+- name: Add user's SSH keys (department)
+  authorized_key:
+    user:   "{{item.1.username}}"
+    key:    "{{lookup('file', 'files/sshkeys/' + item.1.username)}}"
+    state:  "{{item.0.state}}"
+  with_subelements:
+    - valid_users.results
+    - item
+  when: autologic_manage_sshkeys and item.0.state != 'absent' and item.1.username is defined
 
 - name: Add the system users (user)
   user:
     name:     "{{item.value.username}}"
     state:    "{{item.value.state}}"
     system:   "{{item.value.system|default(false)}}"
-    comment:  "{{item.key}}"
+    comment:  "{{item.value.comment|default(omit)}}"
     uid:      "{{item.value.uid|default(omit)}}"
     home:     "{{item.value.home|default(omit)}}"
     group:    "{{item.value.group|default(omit)}}"
-    groups:   "{{item.value.groups|default([])|join(',')}}"
+    groups:   "{{item.value.departments|default([])|join(',')}}"
     remove:   "{{item.value.remove|default(false)}}"
     force:    "{{item.value.force|default(false)}}"
-  with_dict:  autologic_system_users
+  with_dict: autologic_system_users
   when: item.value.username in autologic_user_access
-
-- name: Add user's SSH keys (department)
-  authorized_key:
-    user:     "{{item.0.username}}"
-    key:      "{{item.1}}"
-    state:    "{{item.0.state}}"
-  with_subelements:
-    - autologic_system_users
-    - sshkeys
-  when: autologic_manage_sshkeys and item.0.department in autologic_department_access and item.0.state != 'absent'
 
 - name: Add user's SSH keys (user)
   authorized_key:
-    user:     "{{item.0.username}}"
-    key:      "{{item.1}}"
-    state:    "{{item.0.state}}"
-  with_subelements:
-    - autologic_system_users
-    - sshkeys
-  when: autologic_manage_sshkeys and item.0.username in autologic_user_access and item.0.state != 'absent'
+    user:     "{{item.value.username}}"
+    key:      "{{lookup('file', 'files/sshkeys/' + item.value.username)}}"
+    state:    "{{item.value.state}}"
+  with_dict: autologic_system_users
+  when: autologic_manage_sshkeys and item.value.username in autologic_user_access and item.value.state != 'absent'
+
