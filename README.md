@@ -6,7 +6,7 @@ Using a single hash, this role will allow you to define what users exist on your
 
 ## Version
 
-3.0.2
+3.0.3
 
 ## Role Variables
 
@@ -83,6 +83,10 @@ Each user's SSH is managed from a dedicted file. This makes the ```autologic_sys
 When utilised, the role will use SSH keys found in ```files/sshkeys/{{autologic_system_users.username}}``` for managing your user's ```authorized_keys``` file. That is, in your Ansible root create a folder called ```files/sshkeys``` and place a new file in there with the same name as your username(s). This will be that user's dedicated SSH key file, enabling you to easily manage multiple keys and SSH options from a single point, without creating overly complicated variable files.
 
 See the [Autologic Example Users](https://github.com/AutoLogicTechnology/example-users) repository for a working example on how-to manage user SSH keys.
+
+## Kanban
+
+The project's Kanban board can be found [here on Trello](https://trello.com/b/VE5PMaUc). Considering reviewing this board before raising an issue or feature request as your needs might already be in the works.
 
 ## License
 
