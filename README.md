@@ -6,7 +6,7 @@ Using a single hash, this role will allow you to define what users exist on your
 
 ## Version
 
-3.0.1
+3.0.2
 
 ## Role Variables
 
@@ -45,7 +45,7 @@ autologic_system_users:
 
 You'll note that there is no 'groups' hash or list for defining groups. This is because the ```departments:``` list is used to define what groups the user exists in. It's also used to decide what groups need to be created on what hosts. This means you don't need to worry about a group existing on a system because the role will ensure it exists before adding the user.
 
-If you decide to use the "Department Pattern", then you can make use of two additional variables and has a huge amount of flexibility to your estate. As an example:
+If you decide to use the "Department Pattern", then you can make use of two additional variables and open a large amount of flexibility to your estate. As an example:
 
 ```yaml
 ---
