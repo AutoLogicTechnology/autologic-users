@@ -3,6 +3,7 @@
 autologic_manage_groups: true
 autologic_manage_users: true
 autologic_manage_sshkeys: true
+autologic_manage_sudo: true
 
 # autologic_system_groups: []
 autologic_system_users: []
@@ -12,3 +13,9 @@ autologic_system_users: []
 autologic_department_pattern: false
 autologic_department_access: []
 autologic_user_access: []
+
+# Sudoers related params
+autologic_super_departments_nopasswd: true
+autologic_super_departments: []
+autologic_super_users_nopasswd: true
+autologic_super_users: []
