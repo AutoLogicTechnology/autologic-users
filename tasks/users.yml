@@ -1,23 +1,24 @@
 ---
 
 - name: Add the system users (basic)
+  become: yes
   user:
-    name:     "{{item.value.username}}"
-    state:    "{{item.value.state}}"
-    system:   "{{item.value.system|default(false)}}"
-    comment:  "{{item.value.comment|default(omit)}}"
-    uid:      "{{item.value.uid|default(omit)}}"
-    home:     "{{item.value.home|default(omit)}}"
-    group:    "{{item.value.group|default(omit)}}"
-    groups:   "{{item.value.departments|default([])|join(',')}}"
-    remove:   "{{item.value.remove|default(false)}}"
-    force:    "{{item.value.force|default(false)}}"
-  with_dict:  autologic_system_users
+    name: "{{ item.value.username }}"
+    state: "{{ item.value.state }}"
+    system: "{{ item.value.system | default(false) }}"
+    comment: "{{ item.value.comment | default(omit) }}"
+    uid: "{{ item.value.uid | default(omit) }}"
+    home: "{{ item.value.home | default(omit) }}"
+    group: "{{ item.value.group | default(omit) }}"
+    groups: "{{ item.value.departments | default([]) | join(',') }}"
+    remove: "{{ item.value.remove | default(false) }}"
+    force: "{{ item.value.force | default(false) }}"
+  with_dict: "{{ autologic_system_users }}"
 
 - name: Add user's SSH keys (basic)
   authorized_key:
-    user:     "{{item.value.username}}"
-    key:      "{{lookup('file', 'files/sshkeys/' + item.value.username)}}"
-    state:    "{{item.value.state}}"
-  with_dict: autologic_system_users
+    user: "{{ item.value.username }}"
+    key: "{{ lookup('file', 'files/sshkeys/' + item.value.username) }}"
+    state: "{{ item.value.state }}"
+  with_dict: "{{ autologic_system_users }}"
   when: autologic_manage_sshkeys and item.value.state != 'absent'

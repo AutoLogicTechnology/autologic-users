@@ -1,23 +1,25 @@
 ---
 
 - name: Setup the system departments (department)
+  become: yes
   group:
-    name: "{{item.1}}"
-    state: "{{item.0.state}}"
-    gid: "{{item.0.gid|default(omit)}}"
-    system: "{{item.0.system|default(false)}}"
+    name: "{{ item.1 }}"
+    state: "{{ item.0.state }}"
+    gid: "{{ item.0.gid | default(omit) }}"
+    system: "{{ item.0.system | default(false) }}"
   with_subelements:
-    - autologic_system_users
+    - "{{ autologic_system_users }}"
     - departments
   when: autologic_department_pattern and item.1 in autologic_department_access
 
 - name: Setup the system departments (basic)
+  become: yes
   group:
-    name: "{{item.1}}"
-    state: "{{item.0.state}}"
-    gid: "{{item.0.gid|default(omit)}}"
-    system: "{{item.0.system|default(false)}}"
+    name: "{{ item.1 }}"
+    state: "{{ item.0.state }}"
+    gid: "{{ item.0.gid | default(omit) }}"
+    system: "{{ item.0.system | default(false) }}"
   with_subelements:
-    - autologic_system_users
+    - "{{ autologic_system_users }}"
     - departments
   when: not autologic_department_pattern
