@@ -1,9 +1,10 @@
 ---
 
 - name: Create sudoers file
+  become: yes
   template:
-    src: "autologic-sudo-group.j2"
-    dest: "/etc/sudoers.d/autologic-sudoers"
+    src: autologic-sudo-group.j2
+    dest: /etc/sudoers.d/autologic-sudoers
     mode: 600
-    owner: "root"
-    group: "root"
+    owner: root
+    group: root
